@@ -256,7 +256,7 @@ if [[ "$(uname -s)" != "Darwin" || "$(uname -m)" != "arm64" ]]; then
   warn "This check requires an Apple Silicon Mac. Found $(uname -s) $(uname -m)."
   exit 1
 fi
-for command_name in npm lsof open; do
+for command_name in npm cmake git curl lsof open; do
   if ! command -v "$command_name" >/dev/null 2>&1; then
     warn "Missing required command: $command_name"
     exit 1
