@@ -34,7 +34,7 @@ This includes WAV finalization, whole-recording transcription, rules cleanup, op
 
 ## Troubleshooting
 
-A source build may appear as Electron in System Settings. Check that entry under all three Privacy & Security sections. Quit and relaunch after changing Input Monitoring or Accessibility.
+When `npm start` runs from Terminal, macOS can attribute Electron and both native helpers to Terminal. Enable Terminal under Microphone, Input Monitoring, and Accessibility. If macOS shows Electron or OpenStream instead, enable that entry. Quit and relaunch after changing Input Monitoring or Accessibility.
 
 Do not bypass a Gatekeeper malware or revoked-code warning. The wizard checks for that state before launch. Reinstalling the same revoked Electron version will not fix it.
 

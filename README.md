@@ -83,7 +83,7 @@ OpenStream needs three macOS permissions:
 
 After granting Input Monitoring and Accessibility, quit and restart the app. Click a text field, hold `Cmd+Shift+D`, speak, and release the keys. A cold start can take 15 to 20 seconds while `whisper-server` loads its Metal shaders.
 
-Development builds can appear in System Settings as Electron rather than OpenStream. Permission identity across rebuilds is still being worked out.
+Source runs can be attributed to Terminal in System Settings rather than Electron or OpenStream. Permission identity across rebuilds is still being worked out.
 
 ## Design
 
