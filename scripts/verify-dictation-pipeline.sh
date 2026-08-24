@@ -256,13 +256,14 @@ if [[ "$(uname -s)" != "Darwin" || "$(uname -m)" != "arm64" ]]; then
   warn "This check requires an Apple Silicon Mac. Found $(uname -s) $(uname -m)."
   exit 1
 fi
-for command_name in npm cmake git curl lsof open; do
+for command_name in npm cmake git curl lsof open spctl; do
   if ! command -v "$command_name" >/dev/null 2>&1; then
     warn "Missing required command: $command_name"
     exit 1
   fi
 done
-if [[ ! -x resources/bin/whisper-server || ! -x resources/bin/llama-server || \
+if [[ ! -x node_modules/electron/dist/Electron.app/Contents/MacOS/Electron || \
+      ! -x resources/bin/whisper-server || ! -x resources/bin/llama-server || \
       ! -x resources/bin/hotkey-helper || ! -x resources/bin/accessibility-helper || \
       ! -f resources/models/ggml-base.en.bin || \
       ! -f resources/models/SmolLM2-1.7B-Instruct-Q4_K_M.gguf ]]; then
@@ -274,6 +275,14 @@ if [[ ! -x resources/bin/whisper-server || ! -x resources/bin/llama-server || \
     exit 1
   fi
 fi
+GATEKEEPER_OUTPUT=$(spctl --assess --type execute --verbose=4 node_modules/electron/dist/Electron.app 2>&1 || true)
+if printf '%s\n' "$GATEKEEPER_OUTPUT" | grep -Eqi 'revoked|malware'; then
+  warn "Gatekeeper rejected this Electron runtime as revoked or malicious."
+  printf '%s\n' "$GATEKEEPER_OUTPUT"
+  say "Do not bypass Gatekeeper. Update Electron before continuing."
+  exit 1
+fi
+say "Electron $(node -p 'require("electron/package.json").version') is present and is not revoked by Gatekeeper."
 say "Running the automated checks before touching macOS permissions."
 npm test
 npm run typecheck

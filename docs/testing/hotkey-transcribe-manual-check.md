@@ -12,7 +12,7 @@ From the repository root:
 
 The wizard checks the build, then walks through seven stages:
 
-1. Run the automated test suite and typecheck on an Apple Silicon Mac.
+1. Check that the Electron runtime has not been revoked by Gatekeeper, then run the automated test suite and typecheck on an Apple Silicon Mac.
 2. Start OpenStream and grant Microphone, Input Monitoring, and Accessibility permissions.
 3. Use `Cmd+Shift+D` outside OpenStream and inspect the tray, push-to-talk overlay, and sound meter.
 4. Dictate into TextEdit and confirm the finished text is inserted once.
@@ -35,6 +35,8 @@ This includes WAV finalization, whole-recording transcription, rules cleanup, op
 ## Troubleshooting
 
 A source build may appear as Electron in System Settings. Check that entry under all three Privacy & Security sections. Quit and relaunch after changing Input Monitoring or Accessibility.
+
+Do not bypass a Gatekeeper malware or revoked-code warning. The wizard checks for that state before launch. Reinstalling the same revoked Electron version will not fix it.
 
 On a cold start, the resident transcription model server can spend 15 to 20 seconds loading Metal shaders. The wizard waits up to 120 seconds for each local listener.
 

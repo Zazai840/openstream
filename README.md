@@ -36,7 +36,7 @@ Neither feature is available in the app yet.
 
 - Apple Silicon Mac
 - macOS 13 or newer
-- Node.js 20
+- Node.js 22.12 or newer
 - Xcode Command Line Tools
 - CMake, Git, and curl
 - A network connection for model and server downloads during installation
