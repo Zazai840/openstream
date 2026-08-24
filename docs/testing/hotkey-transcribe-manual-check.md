@@ -2,6 +2,8 @@
 
 Issue [#105](https://github.com/Nabzx/openstream/issues/105) covers the macOS boundaries that CI cannot drive: global key events, a real microphone, menu bar and overlay feedback, and insertion into another application.
 
+The default hotkey is `Control+Option+D`. Issue #84 replaced `Cmd+Shift+D` because the listen-only Command shortcut played the system alert beep in apps without a matching menu item. Whisper could transcribe that beep as "[Music]".
+
 ## Run the wizard
 
 From the repository root:
@@ -14,7 +16,7 @@ The wizard checks the build, then walks through seven stages:
 
 1. Check that the Electron runtime has not been revoked by Gatekeeper, then run the automated test suite and typecheck on an Apple Silicon Mac.
 2. Start OpenStream and grant Microphone, Input Monitoring, and Accessibility permissions.
-3. Use `Cmd+Shift+D` outside OpenStream and inspect the tray, push-to-talk overlay, and sound meter.
+3. Use `Control+Option+D` outside OpenStream and inspect the tray, push-to-talk overlay, and sound meter.
 4. Dictate into TextEdit and confirm the finished text is inserted once.
 5. Inspect both model-server listeners and sample their TCP connections during a dictation. Ports 8178 and 8179 must stay on `127.0.0.1`.
 6. Measure three warm dictations from key release to confirmed insertion. Every measurement must be below 1000 ms.
