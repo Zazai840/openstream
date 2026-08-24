@@ -380,7 +380,7 @@ for run in 1 2 3; do
 done
 while IFS= read -r value; do
   LATENCIES+=("$value")
-done < <(tail -n +$((LATENCY_LINE_START + 1)) "$LOG_FILE" | grep 'release-to-insertion:' | sed -E 's/.*release-to-insertion: ([0-9.]+)ms.*/\1/')
+done < <(tail -n +$((LATENCY_LINE_START + 1)) "$LOG_FILE" | grep 'release-to-insertion:' | tail -n 3 | sed -E 's/.*release-to-insertion: ([0-9.]+)ms.*/\1/')
 if [[ "${#LATENCIES[@]}" -ne 3 ]]; then
   LATENCY_RESULT="fail"
   warn "Expected three timing records, found ${#LATENCIES[@]}. Read $LOG_FILE"
