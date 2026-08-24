@@ -1,5 +1,6 @@
 const { app, Tray, Menu, BrowserWindow, clipboard, ipcMain, nativeImage } = require("electron");
 const path = require("path");
+const { performance } = require("node:perf_hooks");
 const whisperServer = require("./whisperServer");
 const rewriteModelServer = require("./rewriteModelServer");
 const hotkeyHelper = require("./hotkeyHelper");
@@ -124,7 +125,7 @@ const heldResultController = createHeldResultController({
   writeClipboard: (text) => clipboard.writeText(text),
 });
 
-async function transcribeAndPrint(wavBuffer) {
+async function transcribeAndPrint(wavBuffer, timing) {
   const result = await runCompletedDictation({
     wavBuffer,
     transcription,
@@ -138,6 +139,11 @@ async function transcribeAndPrint(wavBuffer) {
   if (result.status === "delivered") {
     console.log(`[dictation] ${result.text}`);
     console.log("[dictation] inserted through accessibility");
+    if (Number.isFinite(timing?.releasedAtMs)) {
+      const latencyMs = performance.now() - timing.releasedAtMs;
+      const budgetResult = latencyMs < 1000 ? "within" : "over";
+      console.log(`[dictation] release-to-insertion: ${latencyMs.toFixed(1)}ms (${budgetResult} 1000ms budget)`);
+    }
   } else if (result.status === "held") {
     console.log(`[dictation] injection held: ${result.delivery.reason}`);
   } else if (result.status === "failed" && result.stage === "delivery") {
@@ -155,9 +161,9 @@ const pushToTalkCoordinator = createPushToTalkCoordinator({
     captureWin.webContents.send("start-recording");
     console.log("[dictation] recording - release the hotkey to stop");
   },
-  stopCapture() {
+  stopCapture(timing) {
     if (!captureWin) return;
-    captureWin.webContents.send("stop-recording");
+    captureWin.webContents.send("stop-recording", timing);
   },
   setUserVisibleState,
 });
@@ -231,9 +237,9 @@ ipcMain.on("capture-ready", (event) => {
   hotkeyHelper.start();
 });
 
-ipcMain.on("recording-complete", (event, arrayBuffer) => {
+ipcMain.on("recording-complete", (event, arrayBuffer, timing) => {
   if (!isCaptureSender(event)) return;
-  transcribeAndPrint(Buffer.from(arrayBuffer));
+  transcribeAndPrint(Buffer.from(arrayBuffer), timing);
 });
 
 ipcMain.on("sound-level", (event, level) => {

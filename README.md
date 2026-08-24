@@ -36,7 +36,7 @@ Neither feature is available in the app yet.
 
 - Apple Silicon Mac
 - macOS 13 or newer
-- Node.js 20
+- Node.js 22.12 or newer
 - Xcode Command Line Tools
 - CMake, Git, and curl
 - A network connection for model and server downloads during installation
@@ -83,7 +83,7 @@ OpenStream needs three macOS permissions:
 
 After granting Input Monitoring and Accessibility, quit and restart the app. Click a text field, hold `Cmd+Shift+D`, speak, and release the keys. A cold start can take 15 to 20 seconds while `whisper-server` loads its Metal shaders.
 
-Development builds can appear in System Settings as Electron rather than OpenStream. Permission identity across rebuilds is still being worked out.
+Source runs can be attributed to Terminal in System Settings rather than Electron or OpenStream. Permission identity across rebuilds is still being worked out.
 
 ## Design
 
@@ -104,7 +104,7 @@ npm run typecheck
 npm run build
 ```
 
-The global hotkey, macOS permission prompts, microphone capture, and insertion into other applications still need a real Mac and a human check. The steps live in [docs/testing/hotkey-transcribe-manual-check.md](docs/testing/hotkey-transcribe-manual-check.md).
+The global hotkey, macOS permission prompts, microphone capture, and insertion into other applications still need a real Mac and a human check. Run [`scripts/verify-dictation-pipeline.sh`](scripts/verify-dictation-pipeline.sh); the [manual-check notes](docs/testing/hotkey-transcribe-manual-check.md) explain what it measures.
 
 ## Project status
 
